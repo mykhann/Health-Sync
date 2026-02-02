@@ -3,19 +3,15 @@ import Navbar from "../shared/Navbar";
 import { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { setUser } from "../../reduxStore/authSlice";
-import { toast } from "react-toastify";
 import { setSingleDoctor } from "../../reduxStore/doctorsSlice";
+import { toast } from "react-toastify";
 import Footer from "../layout/Footer";
 import { baseUrl } from "../../baseUrl.js";
 
 const DoctorLogin = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [input, setInput] = useState({
-    email: "",
-    password: "",
-  });
+  const [input, setInput] = useState({ email: "", password: "" });
 
   const onChangeInput = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
@@ -24,64 +20,66 @@ const DoctorLogin = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${baseUrl}/api/v1/doctors/doctor-login`, input, { withCredentials: true });
+      const res = await axios.post(
+        `${baseUrl}/api/v1/doctors/doctor-login`,
+        input,
+        { withCredentials: true }
+      );
       if (res.data.success) {
         toast.success(res.data.message);
         navigate("/doctor/dashboard");
         dispatch(setSingleDoctor(res.data.doctor));
       }
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data.message || "Login failed");
     }
   };
 
   return (
     <>
       <Navbar />
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 sm:w-96 md:w-1/2 lg:w-1/3 xl:w-1/4 mb-20">
-          <h2 className="text-2xl font-bold mb-4 text-center">Doctor's Login</h2>
-          <form onSubmit={submitHandler}>
-            <div className="mb-4">
-              <input
-                type="email"
-                name="email"
-                onChange={onChangeInput}
-                placeholder="Enter your email address"
-                value={input.email}
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <input
-                type="password"
-                value={input.password}
-                onChange={onChangeInput}
-                placeholder="Enter your password"
-                name="password"
-                className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-                required
-              />
-            </div>
+
+      <div className="flex items-center justify-center py-10 bg-blue-50 min-h-screen">
+        <div className="bg-white/90 backdrop-blur-md border border-white/20 shadow-lg rounded-xl p-6 sm:p-8 w-full max-w-md">
+          <h2 className="text-2xl md:text-3xl font-bold text-blue-900 text-center mb-6">
+            Doctor's Login
+          </h2>
+          <form onSubmit={submitHandler} className="space-y-4">
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={input.email}
+              onChange={onChangeInput}
+              required
+              className="w-full p-3 rounded-lg border border-blue-200 focus:outline-none focus:ring-1 focus:ring-blue-400 text-sm"
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              value={input.password}
+              onChange={onChangeInput}
+              required
+              className="w-full p-3 rounded-lg border border-blue-200 focus:outline-none focus:ring-1 focus:ring-blue-400 text-sm"
+            />
             <button
               type="submit"
-              className="w-full bg-blue-900 text-white p-2 rounded-md hover:bg-blue-600"
+              className="w-full bg-blue-900 hover:bg-blue-800 text-white py-2 font-semibold rounded-lg shadow-md transition-all hover:scale-105 text-sm"
             >
               Login
             </button>
           </form>
-          <div className="flex justify-center mt-3">
-            <Link to="/login">
-              <p className="font-medium cursor-pointer text-gray-900 ">
-                <span className="text-blue-900">Login</span> as a patient
-              </p>
+
+          <div className="text-center mt-4 text-sm">
+            <Link to="/login" className="text-blue-900 hover:text-blue-700 font-medium">
+              Login as a patient
             </Link>
           </div>
         </div>
-      
       </div>
-      <Footer/>
+
+      <Footer />
     </>
   );
 };
