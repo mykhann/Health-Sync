@@ -7,6 +7,7 @@ import { setUser } from "../../reduxStore/authSlice";
 import { toast } from "react-toastify";
 import { setSingleDoctor } from "../../reduxStore/doctorsSlice";
 import Footer from "../layout/Footer";
+import { baseUrl } from "../../baseUrl.js";
 
 const DoctorLogin = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const DoctorLogin = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("https://healthcare-version-1.onrender.com/api/v1/doctors/doctor-login", input, { withCredentials: true });
+      const res = await axios.post(`${baseUrl}/api/v1/doctors/doctor-login`, input, { withCredentials: true });
       if (res.data.success) {
         toast.success(res.data.message);
         navigate("/doctor/dashboard");

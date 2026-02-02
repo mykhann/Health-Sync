@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { Verified } from "lucide-react";
 import Footer from "../layout/Footer";
 import { FaSearch } from "react-icons/fa";
+import { baseUrl } from "../../baseUrl.js";
 
 const DoctorsList = () => {
   const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const DoctorsList = () => {
     const fetchDoctors = async () => {
       try {
         const res = await axios.get(
-          "https://healthcare-version-1.onrender.com/api/v1/doctors/get-all"
+          `${baseUrl}/api/v1/doctors/get-all`
         );
         if (res.data.success) {
           toast.success(res.data.message);

@@ -9,6 +9,8 @@ import axios from "axios";
 import { setSingleAppointment } from "../../reduxStore/appointmentsSlice";
 import { toast } from "react-toastify";
 import { Loader2 } from "lucide-react";
+import { baseUrl } from "../../baseUrl.js";
+
 
 const AppointmentPage = () => {
   const navigate = useNavigate();
@@ -31,7 +33,7 @@ const AppointmentPage = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        `https://healthcare-version-1.onrender.com/api/v1/appointments/register-appointment/${doctorId}`,
+        `${baseUrl}/api/v1/appointments/register-appointment/${doctorId}`,
         input,
         {
           headers: { "Content-Type": "application/json" },

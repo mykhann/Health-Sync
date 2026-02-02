@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setDoctors } from '../../reduxStore/doctorsSlice';
 import { toast } from 'react-toastify';
+import { baseUrl } from "../../baseUrl.js";
+
 
 const AddDoctor = () => {
     const dispatch = useDispatch();
@@ -47,7 +49,7 @@ const AddDoctor = () => {
         formData.append("avatar",input.avatar)
        }
        try {
-        const res=await axios.post("https://healthcare-version-1.onrender.com/api/v1/doctors/create-doctor",formData,{
+        const res=await axios.post(`${baseUrl}/api/v1/doctors/create-doctor`,formData,{
           headers:{"Content-Type":"multipart/form-data"},
           withCredentials:true
         })

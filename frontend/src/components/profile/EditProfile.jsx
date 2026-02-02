@@ -6,6 +6,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { setUser } from "../../reduxStore/authSlice";
 import { FaPhotoFilm } from "react-icons/fa6";
+import { baseUrl } from "../../baseUrl.js";
 
 const EditProfile = () => {
   const dispatch = useDispatch();
@@ -36,7 +37,7 @@ const EditProfile = () => {
     }
     try {
       const res = await axios.put(
-        "https://healthcare-version-1.onrender.com/api/v1/users/update-user",
+        `${baseUrl}/api/v1/users/update-user`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

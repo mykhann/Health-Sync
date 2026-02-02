@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { baseUrl } from "../../baseUrl.js";
 
 const UpdateAppointment = () => {
   const changeHandler = (e) => {
@@ -21,7 +22,7 @@ const UpdateAppointment = () => {
 
     try {
       const res = await axios.patch(
-        `https://healthcare-version-1.onrender.com/api/v1/appointments/update/${appointmentId}`,
+        `${baseUrl}/api/v1/appointments/update/${appointmentId}`,
         input
       );
    

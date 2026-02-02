@@ -3,13 +3,15 @@ import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { setAppointments } from '../reduxStore/appointmentsSlice'
 import { toast } from 'react-toastify'
+import { baseUrl } from '../baseUrl.js'
+
 
 const useFetchAllAppointments = () => {
     const dispatch=useDispatch()
   useEffect(()=>{
     const fetchAllAppointments=async()=>{
         try {
-            const res=await axios.get("https://healthcare-version-1.onrender.com/api/v1/appointments/get",{withCredentials:true})
+            const res=await axios.get(`${baseUrl}/api/v1/appointments/get`,{withCredentials:true})
             if (res.data.success){
                 dispatch(setAppointments(res.data.appointments))
                 

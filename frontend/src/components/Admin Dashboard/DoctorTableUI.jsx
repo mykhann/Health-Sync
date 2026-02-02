@@ -8,6 +8,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { setDoctors } from "../../reduxStore/doctorsSlice";
 import { FaSearch } from "react-icons/fa";
+import { baseUrl } from "../../baseUrl.js";
 
 const DoctorTableUI = () => {
   const [showMore, setShowMore] = useState(null);
@@ -28,7 +29,7 @@ const DoctorTableUI = () => {
   const handleDelete = async (doctorId) => {
     try {
       const res = await axios.delete(
-        `https://healthcare-version-1.onrender.com/api/v1/doctors/delete/${doctorId}`,
+        `${baseUrl}/api/v1/doctors/delete/${doctorId}`,
         { withCredentials: true }
       );
       if (res.data.success) {

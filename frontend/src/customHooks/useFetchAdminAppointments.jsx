@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { baseUrl } from "../baseUrl.js";
 
 import { setAppointmentsAdmin } from "../reduxStore/appointmentsSlice";
 import { toast } from "react-toastify";
@@ -12,7 +13,7 @@ const useFetchAdminAppointments = () => {
     const fetchAdminAppointments = async () => {
       try {
         const res = await axios.get(
-          "https://healthcare-version-1.onrender.com/api/v1/appointments/admin-appointments",
+          `${baseUrl}/api/v1/appointments/admin-appointments`,
           {
             withCredentials: true,
           }

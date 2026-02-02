@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { setDoctors } from '../reduxStore/doctorsSlice';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import { baseUrl } from '../baseUrl';
 
 const useFetchAllDoctors = () => {
   const dispatch = useDispatch();
@@ -10,7 +11,7 @@ const useFetchAllDoctors = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await axios.get('https://healthcare-version-1.onrender.com/api/v1/doctors/get-all');
+        const res = await axios.get(`${baseUrl}/api/v1/doctors/get-all`);
         if (res.data.success) {
           dispatch(setDoctors(res.data.doctors));  
         }
