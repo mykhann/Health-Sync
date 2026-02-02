@@ -44,46 +44,52 @@ const DoctorTableUI = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-900 to-blue-400 flex justify-center">
-      <div className="container p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12">
-        <div className="flex items-center">
-          <Button onClick={() => navigate(-1)}>Back</Button>
+    <div className="min-h-screen bg-gray-50 flex justify-center py-6">
+      <div className="container p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12 bg-white shadow-lg rounded-lg">
+        {/* Header + Search */}
+        <div className="flex flex-wrap items-center mb-6 gap-2">
+          <Button
+            onClick={() => navigate(-1)}
+            className="bg-blue-800 hover:bg-blue-900 text-white rounded-full"
+          >
+            Back
+          </Button>
           <Button
             onClick={() => navigate("/admin/add-doctor")}
-            className="ml-4"
+            className="bg-teal-600 hover:bg-teal-700 text-white rounded-full ml-2"
           >
-            Add a Doctor
+            Add Doctor
           </Button>
-
-          <div className="ml-auto flex items-center">
+          <div className="ml-auto flex items-center w-full md:w-auto">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Type to Search Doctors..."
-              className="p-4 rounded-full border h-10 border-gray-300 focus:outline-none focus:border-blue-500 mr-2"
+              placeholder="Search Doctors..."
+              className="flex-grow md:flex-none p-2 md:p-3 border rounded-full border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
-            <FaSearch className="w-6 h-6" />
+            <FaSearch className="text-gray-600 ml-2 w-5 h-5" />
           </div>
         </div>
 
-        <div className="overflow-x-auto mt-9">
-          <table className="min-w-full bg-white shadow-lg rounded-lg overflow-hidden">
-            <thead className="bg-white">
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white rounded-lg overflow-hidden">
+            <thead className="bg-gray-100">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
                   Image
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
                   Name
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 hidden md:table-cell">
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 hidden md:table-cell">
                   Specialization
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 hidden md:table-cell">
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700 hidden md:table-cell">
                   Contact
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">
+                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-700">
                   Action
                 </th>
               </tr>
@@ -104,9 +110,9 @@ const DoctorTableUI = () => {
                         />
                       </Link>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 flex items-center justify-between">
                       {doctor.name}
-
+                      {/* Mobile toggle */}
                       <button
                         aria-label="Toggle more information"
                         className="ml-4 text-blue-500 hover:text-blue-600 md:hidden flex items-center"
@@ -117,38 +123,35 @@ const DoctorTableUI = () => {
                       >
                         {showMore === index ? (
                           <>
-                            Show Less <ChevronUp className="ml-1 w-4 h-4" />
+                            <ChevronUp className="ml-1 w-4 h-4" />
                           </>
                         ) : (
                           <>
-                            More <ChevronDown className="ml-1 w-4 h-4" />
+                            <ChevronDown className="ml-1 w-4 h-4" />
                           </>
                         )}
                       </button>
                     </td>
-                    <td className="px-6 py-4 hidden md:table-cell">
-                      {doctor.specialization}
-                    </td>
-                    <td className="px-6 py-4 hidden md:table-cell">
-                      {doctor.email}
-                    </td>
-                    <td className="px-6 py-4 flex items-center space-x-4">
+                    <td className="px-6 py-4 hidden md:table-cell">{doctor.specialization}</td>
+                    <td className="px-6 py-4 hidden md:table-cell">{doctor.email}</td>
+                    <td className="px-6 py-4 flex items-center space-x-2">
                       <button
                         onClick={() => handleDelete(doctor._id)}
-                        className="flex items-center text-red-500 mt-4 hover:text-red-600"
+                        className="flex items-center text-red-600 hover:text-red-700 rounded-full px-2 py-1 border border-red-600 hover:bg-red-50 transition"
                         aria-label="Delete doctor"
                       >
-                        <Trash2 className="w-5 h-5 mr-1" />
+                        <Trash2 className="w-4 h-4 mr-1" />
                         Delete
                       </button>
                     </td>
                   </tr>
+
+                  {/* Mobile more info */}
                   {showMore === index && (
-                    <tr className="md:hidden">
-                      <td colSpan={2} className="px-6 py-4">
+                    <tr className="md:hidden bg-gray-50">
+                      <td colSpan={2} className="px-6 py-3">
                         <p>
-                          <strong>Specialization:</strong>{" "}
-                          {doctor.specialization}
+                          <strong>Specialization:</strong> {doctor.specialization}
                         </p>
                         <p>
                           <strong>Contact:</strong> {doctor.email}

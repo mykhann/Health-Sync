@@ -9,127 +9,122 @@ const AdminAppointments = () => {
   useFetchAdminAppointments();
   const { appointmentsAdmin } = useSelector((store) => store.appointments);
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
-  const pendingAppointments = [...appointmentsAdmin].filter(
-    (appointment) => appointment.status === "pending"
-  );
-  const acceptedAppointments = [...appointmentsAdmin].filter(
-    (appointment) => appointment.status === "accepted"
-  );
-  const cancelledAppointments = [...appointmentsAdmin].filter(
-    (appointment) => appointment.status === "cancelled"
-  );
+  // Filters
+  const pendingAppointments = appointmentsAdmin.filter(a => a.status === "pending");
+  const acceptedAppointments = appointmentsAdmin.filter(a => a.status === "accepted");
+  const cancelledAppointments = appointmentsAdmin.filter(a => a.status === "cancelled");
+  const completedAppointments = appointmentsAdmin.filter(a => a.status === "completed");
+
   const filteredAppointments = appointmentsAdmin.filter((appointment) =>
     appointment.doctor.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  const navigate = useNavigate();
 
   const getStatusClass = (status) => {
     switch (status) {
-      case "completed":
-        return "bg-green-500 text-white";
-      case "accepted":
-        return "bg-blue-500 text-white";
-      case "pending":
-        return "bg-gray-500 text-white";
-      case "cancelled":
-        return "bg-red-500 text-white";
-      default:
-        return "bg-yellow-500 text-black";
+      case "completed": return "bg-teal-500 text-white";
+      case "accepted": return "bg-blue-600 text-white";
+      case "pending": return "bg-gray-400 text-white";
+      case "cancelled": return "bg-gray-500 text-white";
+      default: return "bg-gray-300 text-black";
     }
   };
 
   return (
-    <div className="bg-gradient-to-r from-blue-900 to-gray-900 min-h-screen p-6">
-       <h1 className="text-white text-3xl font-bold mb-6 text-center">
-          Admin Appointments
-        </h1>
-      <div className="container mx-auto max-w-4xl">
-        <div className="ml-auto mb-4 flex items-center">
+    <div className="bg-gray-50 min-h-screen p-6">
+      <h1 className="text-gray-800 text-3xl font-bold mb-4 text-center">
+        Admin Appointments
+      </h1>
+
+      {/* Search + Back */}
+      <div className="flex flex-wrap justify-between items-center gap-2 mb-4 max-w-4xl mx-auto">
+        <div className="flex items-center gap-2 flex-grow">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search Appointments..."
-            className="p-4 rounded-full border h-10 border-gray-300 focus:outline-none focus:border-blue-500 mr-2"
+            placeholder="Search by Doctor..."
+            className="p-2 md:p-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 flex-grow"
           />
-          <FaSearch className="w-6 text-black h-6" />
+          <FaSearch className="text-gray-600 w-5 h-5 md:w-6 md:h-6" />
         </div>
-       
         <Button
           onClick={() => navigate(-1)}
-          className="bg-black text-white px-4 py-2 mb-4 h-10 w-20 rounded-lg"
+          className="bg-blue-800 hover:bg-blue-900 text-white px-4 py-2 rounded-full"
         >
           Back
         </Button>
-        <Button className="bg-red-900 text-white px-4 py-2 mb-4 h-10 w-30 rounded-full ml-2">
-          Cancelled Appointments ({cancelledAppointments.length})
-        </Button>
-        <Button className="bg-gray-600 text-white px-4 py-2 mb-4 h-10 w-30 rounded-full ml-2">
-          Pending Appointments ({pendingAppointments.length})
-        </Button>
-
-        <Button className="bg-blue-900 text-white px-4 py-2 mb-4 h-10 w-30 rounded-full ml-2">
-          Accepted Appointments ({acceptedAppointments.length})
-        </Button>
-
-        {filteredAppointments.length === 0 ? (
-          <p className="text-white text-center">No appointments available.</p>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="table-auto w-full bg-white text-black rounded-lg shadow-md">
-              <thead className="bg-white text-black">
-                <tr>
-                  <th className="p-4 text-left">Doctors Info</th>
-                  <th className="p-4 text-left">Patients Info</th>
-                  <th className="p-4 text-left">Appointment Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredAppointments.map((appointment) => (
-                  <tr
-                    key={appointment._id}
-                    className="border-b border-gray-300"
-                  >
-                    {/* Doctor Info */}
-                    <td className="p-4">
-                      <div className="flex items-center">
-                        <img
-                          src={appointment.doctor?.avatar}
-                          alt={appointment?.doctor?.name}
-                          className="w-16 h-16 rounded-full mr-2"
-                        />
-                        <span>{appointment.doctor?.name}</span>
-                      </div>
-                    </td>
-                    {/* Patient Info */}
-                    <td className="p-4">
-                      <div className="flex items-center">
-                        <img
-                          src={appointment?.patient?.avatar}
-                          alt={appointment?.patient?.name}
-                          className="w-16 h-16 rounded-full mr-2"
-                        />
-                        <span>{appointment?.patient?.name}</span>
-                      </div>
-                    </td>
-                    {/* Appointment Status */}
-                    <td className="p-4">
-                      <button
-                        className={`px-4 py-2 rounded-full ${getStatusClass(
-                          appointment?.status
-                        )}`}
-                      >
-                        {appointment?.status}
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
       </div>
+
+      {/* Status Filters */}
+      <div className="flex flex-wrap justify-center gap-2 mb-4 max-w-4xl mx-auto">
+        <Button className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-1 rounded-full">
+          Cancelled ({cancelledAppointments.length})
+        </Button>
+        <Button className="bg-gray-400 hover:bg-gray-500 text-white px-4 py-1 rounded-full">
+          Pending ({pendingAppointments.length})
+        </Button>
+        <Button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-full">
+          Accepted ({acceptedAppointments.length})
+        </Button>
+        <Button className="bg-teal-500 hover:bg-teal-600 text-white px-4 py-1 rounded-full">
+          Completed ({completedAppointments.length})
+        </Button>
+      </div>
+
+      {/* Table */}
+      {filteredAppointments.length === 0 ? (
+        <p className="text-gray-600 text-center mt-8">No appointments found.</p>
+      ) : (
+        <div className="overflow-x-auto max-w-6xl mx-auto rounded-lg shadow-md bg-white">
+          <table className="table-auto w-full text-gray-800">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="p-3 text-left">Doctor</th>
+                <th className="p-3 text-left">Patient</th>
+                <th className="p-3 text-left">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredAppointments.map((appointment) => (
+                <tr key={appointment._id} className="border-b border-gray-200">
+                  {/* Doctor Info */}
+                  <td className="p-3 flex items-center gap-2">
+                    <img
+                      src={appointment.doctor?.avatar}
+                      alt={appointment?.doctor?.name}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <span>{appointment.doctor?.name}</span>
+                  </td>
+
+                  {/* Patient Info */}
+                  <td className="p-3 flex items-center gap-2">
+                    <img
+                      src={appointment?.patient?.avatar}
+                      alt={appointment?.patient?.name}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <span>{appointment?.patient?.name}</span>
+                  </td>
+
+                  {/* Status */}
+                  <td className="p-3">
+                    <span
+                      className={`px-3 py-1 rounded-full font-semibold ${getStatusClass(
+                        appointment.status
+                      )}`}
+                    >
+                      {appointment.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
