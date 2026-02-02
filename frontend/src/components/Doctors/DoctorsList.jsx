@@ -11,16 +11,18 @@ import { toast } from "react-toastify";
 import { setDoctors } from "../../reduxStore/doctorsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../shared/Navbar";
-import { useNavigate } from "react-router-dom";
-import { Verified } from "lucide-react";
 import Footer from "../layout/Footer";
+import { Verified } from "lucide-react";
 import { FaSearch } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { baseUrl } from "../../baseUrl.js";
 
 const DoctorsList = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Fetch all doctors on mount
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
@@ -43,22 +45,20 @@ const DoctorsList = () => {
       doctor.specialization.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const navigate = useNavigate();
-
   return (
     <>
       <Navbar />
 
       <div className="py-10 bg-gradient-to-b from-blue-50 to-blue-100 min-h-screen">
-        {/* Search */}
-        <div className="flex mt-10 justify-center mb-8">
+        {/* Search Bar */}
+        <div className="flex justify-center mb-8">
           <div className="flex items-center w-full max-w-lg bg-white/90 backdrop-blur-md border border-white/30 rounded-full shadow-md p-2">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search Doctors by Name or Specialization..."
-              className="flex-grow bg-transparent p-3 text-gray-700 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all placeholder:text-gray-400"
+              className="flex-grow bg-transparent p-3 text-gray-700 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder:text-gray-400 transition-all"
             />
             <FaSearch className="w-5 h-5 text-blue-900 ml-2" />
           </div>
@@ -67,7 +67,7 @@ const DoctorsList = () => {
         {/* Doctors Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {filteredDoctors.length === 0 ? (
-            <p className="text-red-900 text-center col-span-full">
+            <p className="text-gray-500 text-center col-span-full">
               No doctors available.
             </p>
           ) : (
@@ -84,32 +84,32 @@ const DoctorsList = () => {
                 >
                   <img
                     src={doctor.avatar}
-                    alt="Doctor Avatar"
-                    className="w-full h-60 object-cover"
+                    alt={`${doctor.name} Avatar`}
+                    className="w-full h-60 object-cover object-top"
                   />
                 </CardHeader>
 
-                <CardBody className="text-center">
+                <CardBody className="text-center px-4 py-6">
+                  {/* Doctor Name with Verified */}
                   <Typography
                     variant="h5"
                     color="blue-gray"
-                    className="flex justify-center items-center gap-2 font-bold"
+                    className="flex justify-center items-center gap-2 font-bold text-lg sm:text-xl"
                   >
-                    {doctor.name.toUpperCase()} <Verified className="text-blue-500" />
+                    {doctor.name.toUpperCase()}{" "}
+                    <Verified className="text-blue-500 w-5 h-5" />
                   </Typography>
 
-                  <Typography
-                    variant="small"
-                    color="gray"
-                    className="block mt-1 text-blue-900 font-medium"
-                  >
+                  {/* Specialization Badge */}
+                  <span className="inline-block bg-blue-100 text-blue-900 px-3 py-1 rounded-full text-xs font-semibold mt-2">
                     {doctor.specialization}
-                  </Typography>
+                  </span>
 
+                  {/* Fee */}
                   <Typography
                     variant="paragraph"
                     color="gray"
-                    className="mt-2 text-sm font-medium"
+                    className="mt-3 text-sm font-medium text-gray-700"
                   >
                     Fee:{" "}
                     <span className="text-green-800 font-semibold">
@@ -117,9 +117,10 @@ const DoctorsList = () => {
                     </span>
                   </Typography>
 
+                  {/* Book Appointment Button */}
                   <Button
                     onClick={() => navigate(`/appointment/${doctor._id}`)}
-                    className="mt-4 bg-blue-900 hover:bg-blue-800 w-full rounded-xl shadow-lg transition-transform hover:scale-105"
+                    className="mt-4 bg-blue-900 hover:bg-blue-800 w-full py-3 rounded-xl shadow-md hover:shadow-lg transition-transform hover:scale-105"
                   >
                     Book Appointment
                   </Button>
