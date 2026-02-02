@@ -24,101 +24,112 @@ const DoctorsList = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const res = await axios.get(
-          `${baseUrl}/api/v1/doctors/get-all`
-        );
+        const res = await axios.get(`${baseUrl}/api/v1/doctors/get-all`);
         if (res.data.success) {
-          toast.success(res.data.message);
           dispatch(setDoctors(res.data.doctors));
         }
       } catch (error) {
-        toast.error(error.response.data.message);
+        toast.error(error.response?.data?.message || "Something went wrong");
       }
     };
     fetchDoctors();
   }, [dispatch]);
 
   const { doctors = [] } = useSelector((store) => store.doctors);
-  const filteredDoctors = [
-    ...doctors.filter((doctor) =>
-      doctor.name.toLowerCase().includes(searchQuery.toLowerCase())
-    ),
-    ...doctors.filter((doctor) =>
+
+  const filteredDoctors = doctors.filter(
+    (doctor) =>
+      doctor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       doctor.specialization.toLowerCase().includes(searchQuery.toLowerCase())
-    ),
-  ];
+  );
 
   const navigate = useNavigate();
 
   return (
     <>
       <Navbar />
-      <div className="py-10 max-w-5xl mx-auto">
-        <div className="flex max-w-2xl flex-col sm:flex-row justify-center sm:justify-start mb-4 ml-0 sm:ml-10">
-          <div className="flex items-center w-full">
+
+      <div className="py-10 bg-gradient-to-b from-blue-50 to-blue-100 min-h-screen">
+        {/* Search */}
+        <div className="flex mt-10 justify-center mb-8">
+          <div className="flex items-center w-full max-w-lg bg-white/90 backdrop-blur-md border border-white/30 rounded-full shadow-md p-2">
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search Doctors By Name & Specialization..."
-              className="p-4 rounded-full border h-10 border-gray-300 focus:outline-none focus:border-blue-500 flex-grow sm:max-w-xs md:max-w-md" // Adjusted max-width for different screen sizes
+              placeholder="Search Doctors by Name or Specialization..."
+              className="flex-grow bg-transparent p-3 text-gray-700 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all placeholder:text-gray-400"
             />
-            <FaSearch className="w-6 h-6 text-blue-900 ml-2" />
+            <FaSearch className="w-5 h-5 text-blue-900 ml-2" />
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+
+        {/* Doctors Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {filteredDoctors.length === 0 ? (
-            <p className="text-red-900 text-center">No Doctors available.</p>
+            <p className="text-red-900 text-center col-span-full">
+              No doctors available.
+            </p>
           ) : (
-            filteredDoctors.map((doctor, index) => (
+            filteredDoctors.map((doctor) => (
               <Card
-                key={index}
-                className="max-w-[28rem] overflow-hidden shadow-lg"
+                key={doctor._id}
+                className="max-w-sm bg-white/90 backdrop-blur-md shadow-xl rounded-2xl border border-white/30 hover:scale-105 transition-transform"
               >
                 <CardHeader
                   floated={false}
                   shadow={false}
                   color="transparent"
-                  className="m-0 rounded-none"
+                  className="m-0 rounded-t-2xl overflow-hidden"
                 >
                   <img
                     src={doctor.avatar}
                     alt="Doctor Avatar"
-                    className="w-60 h-60 object-cover object-top mx-auto"
+                    className="w-full h-60 object-cover"
                   />
                 </CardHeader>
-                <CardBody>
-                  <Typography variant="h4" color="blue-gray">
-                    <div className="flex">
-                      {doctor.name.toUpperCase()}{" "}
-                      <Verified className="mt-1 ml-3" />
-                    </div>
+
+                <CardBody className="text-center">
+                  <Typography
+                    variant="h5"
+                    color="blue-gray"
+                    className="flex justify-center items-center gap-2 font-bold"
+                  >
+                    {doctor.name.toUpperCase()} <Verified className="text-blue-500" />
                   </Typography>
-                  <Typography variant="p" color="blue-gray">
+
+                  <Typography
+                    variant="small"
+                    color="gray"
+                    className="block mt-1 text-blue-900 font-medium"
+                  >
                     {doctor.specialization}
                   </Typography>
 
                   <Typography
-                    variant="lead"
+                    variant="paragraph"
                     color="gray"
-                    className="mt-1 font-normal"
+                    className="mt-2 text-sm font-medium"
                   >
-                    Appointment Fee :{" "}
-                    <span className="font-bold text-green-800">{`${doctor.fees} $ `}</span>
+                    Fee:{" "}
+                    <span className="text-green-800 font-semibold">
+                      {doctor.fees} $
+                    </span>
                   </Typography>
-                </CardBody>
 
-                <Button
-                  onClick={() => navigate(`/appointment/${doctor._id}`)}
-                  className="bg-blue-800 hover:bg-blue-900"
-                >
-                  Book Appointment
-                </Button>
+                  <Button
+                    onClick={() => navigate(`/appointment/${doctor._id}`)}
+                    className="mt-4 bg-blue-900 hover:bg-blue-800 w-full rounded-xl shadow-lg transition-transform hover:scale-105"
+                  >
+                    Book Appointment
+                  </Button>
+                </CardBody>
               </Card>
             ))
           )}
         </div>
       </div>
+
       <Footer />
     </>
   );

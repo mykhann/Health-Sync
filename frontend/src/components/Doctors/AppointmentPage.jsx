@@ -10,7 +10,7 @@ import { setSingleAppointment } from "../../reduxStore/appointmentsSlice";
 import { toast } from "react-toastify";
 import { Loader2 } from "lucide-react";
 import { baseUrl } from "../../baseUrl.js";
-
+import Footer from "../layout/Footer.jsx";
 
 const AppointmentPage = () => {
   const navigate = useNavigate();
@@ -19,6 +19,7 @@ const AppointmentPage = () => {
   const params = useParams();
   const doctorId = params.id;
   const singleDoctor = useSelector((store) => store.doctors.singleDoctor);
+
   const [input, setInput] = useState({
     date: "",
     time: "",
@@ -35,10 +36,7 @@ const AppointmentPage = () => {
       const res = await axios.post(
         `${baseUrl}/api/v1/appointments/register-appointment/${doctorId}`,
         input,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
+        { headers: { "Content-Type": "application/json" }, withCredentials: true }
       );
       if (res.data.success) {
         dispatch(setSingleAppointment(res.data.appointment));
@@ -55,9 +53,7 @@ const AppointmentPage = () => {
   if (!singleDoctor) {
     return (
       <div className="flex items-center justify-center min-h-screen p-4">
-        <h1 className="text-2xl font-bold text-gray-800">
-          <Loader2 className="animate-spin w-10 h-14" />
-        </h1>
+        <Loader2 className="animate-spin w-12 h-12 text-blue-900" />
       </div>
     );
   }
@@ -65,106 +61,91 @@ const AppointmentPage = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen flex flex-col items-center justify-start pt-8"> 
-        <h1 className="mb-6 text-4xl font-bold text-black text-center">
-          Book an appointment with <span className="text-red-800">{singleDoctor.name}</span>
+
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 py-10 flex flex-col items-center">
+        <h1 className="text-3xl mt-10 md:text-4xl font-bold text-blue-900 text-center mb-8">
+          Book an Appointment with{" "}
+          <span className="text-red-800">{singleDoctor.name}</span>
         </h1>
 
-        <div className="flex flex-col md:flex-row w-full max-w-5xl space-x-0 md:space-x-4">
+        <div className="flex flex-col md:flex-row w-full max-w-6xl gap-6 px-4">
           {/* Doctor Card */}
-          <div className="w-full max-w-md p-6 md:mr-6 bg-white rounded-lg ">
+          <div className="w-full md:w-1/3 bg-white/90 backdrop-blur-md border border-white/30 shadow-xl rounded-2xl p-6 flex justify-center">
             <SingleDoctorCard />
           </div>
-
-          {/* Vertical Divider */}
-          <div className="hidden md:block w-px bg-gray-300 mx-4"></div>
 
           {/* Appointment Form */}
           <form
             onSubmit={submitHandler}
-            className="w-full max-w-md p-6 rounded-lg space-y-4"
+            className="w-full md:w-2/3 bg-white/90 backdrop-blur-md border border-white/30 shadow-xl rounded-2xl p-6 md:p-8 space-y-4"
           >
             <div>
-              <label
-                htmlFor="date"
-                className="block mb-1 text-sm font-medium text-black"
-              >
-                Select Date
-              </label>
+              <label className="block mb-1 font-medium text-blue-900">Select Date</label>
               <input
                 type="date"
-                id="date"
-                onChange={inputHandler}
-                value={input.date}
                 name="date"
+                value={input.date}
+                onChange={inputHandler}
                 required
-                className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+                className="w-full p-3 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
               />
             </div>
 
             <div>
-              <label
-                htmlFor="time"
-                className="block mb-1 text-sm font-medium text-black"
-              >
-                Select Time
-              </label>
+              <label className="block mb-1 font-medium text-blue-900">Select Time</label>
               <input
                 type="time"
-                id="time"
-                onChange={inputHandler}
-                value={input.time}
                 name="time"
+                value={input.time}
+                onChange={inputHandler}
                 required
-                className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+                className="w-full p-3 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
               />
             </div>
 
             <div>
-              <label
-                htmlFor="reason"
-                className="block mb-1 text-sm font-medium text-black"
-              >
+              <label className="block mb-1 font-medium text-blue-900">
                 Reason for Appointment
               </label>
               <textarea
-                id="reason"
                 name="reason"
-                onChange={inputHandler}
                 value={input.reason}
+                onChange={inputHandler}
+                rows="4"
                 placeholder="Enter the reason for your appointment"
                 required
-                rows="4"
-                className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
-              ></textarea>
+                className="w-full p-3 rounded-xl border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+              />
             </div>
+
             {user ? (
               <Button
                 type="submit"
-                className="w-full py-4 px-4 bg-blue-900 text-white font-semibold rounded-md transition"
+                className="w-full bg-blue-900 hover:bg-blue-800 py-3 font-semibold rounded-xl shadow-lg transition-all hover:scale-105"
               >
-                Book an appointment
+                Book Appointment
               </Button>
             ) : (
-              <div>
+              <div className="space-y-2">
                 <Button
                   type="submit"
-                  className="w-full py-4 px-4 bg-blue-500 text-white font-semibold rounded-md transition"
-                  disabled={true}
+                  disabled
+                  className="w-full bg-blue-500 py-3 font-semibold rounded-xl shadow-lg cursor-not-allowed"
                 >
-                  Book an appointment
+                  Book Appointment
                 </Button>
-                <h1 className="text-black mt-4">
-                  <Link to="/login">
-                    <span className="font-bold text-blue-500">Login </span>
-                  </Link>
+                <p className="text-center text-red-900 font-medium">
+                  <Link to="/login" className="hover:text-red-700">
+                    <span className="text-blue-800">Login</span>
+                  </Link>{" "}
                   to book an appointment
-                </h1>
+                </p>
               </div>
             )}
           </form>
         </div>
       </div>
+        <Footer/>
     </>
   );
 };
