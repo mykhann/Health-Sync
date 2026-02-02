@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaCalendarAlt, FaChartLine, FaSignOutAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,50 +9,62 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const { singleDoctor } = useSelector((store) => store.doctors);
 
-  
   const handleLogout = () => {
-    dispatch(setSingleDoctor(null))
-    navigate("/doctor/login")
-  }
+    dispatch(setSingleDoctor(null));
+    navigate("/doctor/login");
+  };
 
   return (
-    <div className="flex flex-col bg-gradient-to-r from-blue-900 to-gray-900 min-h-screen">
-      <div className="flex flex-1 flex-col md:flex-row">
-        <div className="flex-1 p-6 lg:p-8 max-w-4xl mx-auto">
-          <button onClick={handleLogout} className="flex items-center w-20 bg-red-600 text-white mr-4 px-4 h-8 py-2 rounded-lg hover:bg-red-700 transition duration-300">
-            <FaSignOutAlt className="w-8 h-8" />
-          </button>
-          <h1 className="text-5xl text-white text-center font-extrabold mb-12">
-            Doctor Dashboard
+    <div className="flex flex-col bg-gray-50 min-h-screen">
+      <div className="flex flex-col md:flex-row flex-1">
+        <div className="flex-1 p-6 lg:p-10 max-w-5xl mx-auto">
+          {/* Logout */}
+          <div className="flex justify-end mb-6">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-300"
+            >
+              <FaSignOutAlt className="w-5 h-5" />
+              Logout
+            </button>
+          </div>
+
+          {/* Title */}
+          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 text-center mb-12">
+            Welcome, Dr. {singleDoctor?.name || "Dashboard"}
           </h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10 mb-10">
+
+          {/* Dashboard Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Appointments Card */}
-            <div className="flex flex-col justify-center bg-blue-200 text-blue-900 p-8 rounded-lg shadow-lg hover:shadow-2xl transition duration-300 transform hover:scale-105">
-              <FaCalendarAlt className="text-6xl mb-6 self-center text-blue-700" />
-              <h2 className="text-3xl font-extrabold text-center">
+            <div className="flex flex-col justify-center bg-white shadow-md rounded-xl p-8 hover:shadow-xl transition duration-300 transform hover:scale-105">
+              <FaCalendarAlt className="text-5xl text-teal-500 mb-4 self-center" />
+              <h2 className="text-2xl font-bold text-gray-800 text-center">
                 Appointments
               </h2>
-              <p className="text-lg text-center mt-4">
-                Manage and track upcoming appointments.
+              <p className="text-gray-600 mt-2 text-center">
+                Manage and track your upcoming appointments.
               </p>
               <Link
                 to="/doctor/view-appointments"
-                className="mt-6 bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300 self-center"
+                className="mt-4 bg-teal-500 text-white px-6 py-2 rounded-full hover:bg-teal-600 self-center transition duration-300"
               >
                 View Appointments
               </Link>
             </div>
 
             {/* Analytics Card */}
-            <div className="flex flex-col bg-red-200 text-red-900 p-8 rounded-lg shadow-lg hover:shadow-2xl transition duration-300 transform hover:scale-105">
-              <FaChartLine className="text-6xl mb-6 self-center text-red-700" />
-              <h2 className="text-3xl font-extrabold text-center">Analytics</h2>
-              <p className="text-lg text-center mt-4">
-                View appointment and patient care trends.
+            <div className="flex flex-col justify-center bg-white shadow-md rounded-xl p-8 hover:shadow-xl transition duration-300 transform hover:scale-105">
+              <FaChartLine className="text-5xl text-indigo-500 mb-4 self-center" />
+              <h2 className="text-2xl font-bold text-gray-800 text-center">
+                Analytics
+              </h2>
+              <p className="text-gray-600 mt-2 text-center">
+                View appointment trends and patient care metrics.
               </p>
               <Link
                 to="/doctor/manage-patients"
-                className="mt-6 bg-red-600 text-white px-6 py-3 rounded-full hover:bg-red-700 transition duration-300 self-center"
+                className="mt-4 bg-indigo-500 text-white px-6 py-2 rounded-full hover:bg-indigo-600 self-center transition duration-300"
               >
                 View Analytics
               </Link>

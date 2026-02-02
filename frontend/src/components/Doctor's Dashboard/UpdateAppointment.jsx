@@ -6,83 +6,86 @@ import { toast } from "react-toastify";
 import { baseUrl } from "../../baseUrl.js";
 
 const UpdateAppointment = () => {
-  const changeHandler = (e) => {
-    setInput({ ...input, [e.target.name]: e.target.value });
-  };
-  
   const [input, setInput] = useState({
     status: "",
   });
-  
-  const params = useParams();
-  const appointmentId = params.id;
-  
+
+  const navigate = useNavigate();
+  const { id: appointmentId } = useParams();
+
+  const changeHandler = (e) => {
+    setInput({ ...input, [e.target.name]: e.target.value });
+  };
+
   const submitHandler = async (e) => {
     e.preventDefault();
-
     try {
       const res = await axios.patch(
         `${baseUrl}/api/v1/appointments/update/${appointmentId}`,
-        input
+        input,
+        { withCredentials: true }
       );
-   
+
       if (res.data.success) {
+        toast.success("Appointment updated successfully!");
         navigate(-1);
       }
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
 
-  const navigate = useNavigate();
-  
   return (
-    <div className="flex flex-col md:flex-row bg-gradient-to-r from-blue-900 to-gray-900 min-h-screen">
-      <div className="flex-grow p-6">
-        <div className="overflow-x-auto bg-white rounded-lg shadow-md p-4 max-w-md mx-auto">
-          <h1 className="text-3xl text-center text-black font-bold mb-6">
-            Edit Appointment
-          </h1>
-          <form onSubmit={submitHandler}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-              {/* Status */}
-              <div>
-                <select
-                  id="status"
-                  name="status"
-                  className="w-full p-2 bg-gray-200 text-black border border-gray-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  onChange={changeHandler}
-                  value={input.status}
-                  required
-                >
-                  <option value="" disabled>
-                    Update Status
-                  </option>
-                  <option value="accepted">accepted</option>
-                  <option value="pending">pending</option>
-                  <option value="cancelled">cancelled</option>
-                  <option value="completed">completed</option>
-                </select>
-              </div>
-            </div>
+    <div className="flex flex-col items-center justify-center bg-gradient-to-r from-blue-900 to-blue-700 min-h-screen p-6">
+      <div className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
+        <h1 className="text-3xl text-center font-bold text-gray-800 mb-6">
+          Edit Appointment
+        </h1>
 
-            <div className="flex justify-between space-x-4">
-              <button
-                type="submit"
-                className="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-900 transition duration-200 w-full"
-              >
-                Update
-              </button>
-              <Button
-                type="button"
-                onClick={() => navigate(-1)}
-                className="mt-4 bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition duration-200 w-full"
-              >
-                Cancel
-              </Button>
-            </div>
-          </form>
-        </div>
+        <form onSubmit={submitHandler}>
+          {/* Status Dropdown */}
+          <div className="mb-4">
+            <label
+              htmlFor="status"
+              className="block mb-2 font-semibold text-gray-700"
+            >
+              Appointment Status
+            </label>
+            <select
+              id="status"
+              name="status"
+              value={input.status}
+              onChange={changeHandler}
+              required
+              className="w-full p-3 rounded border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+            >
+              <option value="" disabled>
+                Select Status
+              </option>
+              <option value="accepted">Accepted</option>
+              <option value="pending">Pending</option>
+              <option value="cancelled">Cancelled</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+
+          {/* Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 mt-6">
+            <button
+              type="submit"
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded transition duration-200"
+            >
+              Update
+            </button>
+            <Button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="flex-1 bg-gray-800 hover:bg-gray-900 text-white font-semibold px-4 py-2 rounded transition duration-200"
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   );
