@@ -51,7 +51,7 @@ const DoctorsList = () => {
 
       <div className="py-10 bg-gradient-to-b from-blue-50 to-blue-100 min-h-screen">
         {/* Search Bar */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mt-10 mb-8">
           <div className="flex items-center w-full max-w-lg bg-white/90 backdrop-blur-md border border-white/30 rounded-full shadow-md p-2">
             <input
               type="text"
